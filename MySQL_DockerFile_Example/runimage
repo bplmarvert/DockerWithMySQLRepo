@@ -1,0 +1,25 @@
+#! /bin/bash
+#
+# File: runserver
+#
+# Purpose: Runs the MySQL server in a Docker container
+#
+# NB: Uses a Docker volume named mysql_data to contain database data
+#
+
+export MYSQL_IMAGE=trainingmysqlimage
+export MYSQL_VERSION=0.1
+export ROOT_PASSWORD=root
+export MYSQL_SERVER_CONTAINER_NAME=mysqlContainer
+export MYSQL_SERVER_EXTERNAL_PORT=3306
+export MYSQL_SERVER_INTERNAL_PORT=3306
+
+docker rm -f mysqlContainer
+
+docker run -d \
+  --name $MYSQL_SERVER_CONTAINER_NAME \
+  -p $MYSQL_SERVER_EXTERNAL_PORT:$MYSQL_SERVER_INTERNAL_PORT \
+  -e MYSQL_ROOT_PASSWORD=$ROOT_PASSWORD \
+  -v monitoring_data:/var/lib/mysql \
+  ${MYSQL_IMAGE}:${MYSQL_VERSION}
+docker ps
