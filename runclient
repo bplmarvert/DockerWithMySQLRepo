@@ -1,4 +1,3 @@
 #! /bin/bash
 
 docker run --rm -i  -v $(pwd)/sql:/data mysql:5.7 /bin/bash
-
