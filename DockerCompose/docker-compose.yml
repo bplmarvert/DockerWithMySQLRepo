@@ -1,0 +1,5 @@
+services:
+    centoshttpd:
+        image: centosapache:0.1
+        ports:
+            - "7080:80"
