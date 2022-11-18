@@ -1,0 +1,573 @@
+Last login: Mon Nov 14 16:24:05 on ttys000
+➜  ~ pwd
+/Users/fr13168
+➜  ~ ls 
+Applications                    Pictures
+Applications (Parallels)        Postman
+Desktop                         Public
+DockerWithMySQLRepo             PycharmProjects
+Documents                       create_Tables_first_project.sql
+Downloads                       getting-started
+Library                         package-lock.json
+Movies                          prodvCorr.js
+Music                           requêtes de recherche.sql
+Parallels
+➜  ~ cd Doc
+cd: no such file or directory: Doc
+➜  ~ cd DockerWithMySQLRepo 
+➜  DockerWithMySQLRepo git:(main) ll
+total 32
+drwxr-xr-x  5 fr13168  staff   160B Nov 17 11:07 MySQL_DockerFile_Example
+-rw-r--r--  1 fr13168  staff   2.2K Nov 17 11:07 README.md
+-rw-r--r--  1 fr13168  staff    74B Nov 17 11:07 runclient
+-rw-r--r--  1 fr13168  staff   809B Nov 17 11:07 runserver_first
+-rw-r--r--  1 fr13168  staff   813B Nov 17 11:07 runserver_first.save
+drwxr-xr-x  3 fr13168  staff    96B Nov 17 11:07 sql
+➜  DockerWithMySQLRepo git:(main) docker volume create --name monitoring_data
+monitoring_data
+➜  DockerWithMySQLRepo git:(main) docker volume ls
+DRIVER    VOLUME NAME
+local     1d8ba14f7e48acc901031255e4a97287cd16c36767908f06a1abbd119c9e6a6f
+local     b186aecb755dafaf8e91dab405f74c7fc9564a9e0809e34f3ad163f33e25719a
+local     b741de06deab7251155d582e7406628f9c1728ed28c24e5e9feabc9af170ede8
+local     cd7a0da2de2fa3208289affefc79282a6d4b52219d7e7a88a857865319764534
+local     f6626b8263adfd1685233169d633bc73179067aabdacaa96fb427c2e47bb1aa3
+local     monitoring_data
+➜  DockerWithMySQLRepo git:(main) docker volume ls -a
+unknown shorthand flag: 'a' in -a
+See 'docker volume ls --help'.
+➜  DockerWithMySQLRepo git:(main) docker volume ls -al
+unknown shorthand flag: 'a' in -al
+See 'docker volume ls --help'.
+➜  DockerWithMySQLRepo git:(main) docker volume ls    
+DRIVER    VOLUME NAME
+local     1d8ba14f7e48acc901031255e4a97287cd16c36767908f06a1abbd119c9e6a6f
+local     b186aecb755dafaf8e91dab405f74c7fc9564a9e0809e34f3ad163f33e25719a
+local     b741de06deab7251155d582e7406628f9c1728ed28c24e5e9feabc9af170ede8
+local     cd7a0da2de2fa3208289affefc79282a6d4b52219d7e7a88a857865319764534
+local     f6626b8263adfd1685233169d633bc73179067aabdacaa96fb427c2e47bb1aa3
+local     monitoring_data
+➜  DockerWithMySQLRepo git:(main) chmod u+x runserver_first
+➜  DockerWithMySQLRepo git:(main) ✗ ls
+MySQL_DockerFile_Example README.md                runclient                runserver_first          runserver_first.save     sql
+➜  DockerWithMySQLRepo git:(main) ✗ cat runserver_first
+#! /bin/bash
+#
+# File: runserver
+#
+# Purpose: Runs the MySQL server in a Docker container
+#
+# NB: Uses a Docker volume named mysql_data to contain database data
+#
+
+export MYSQL_IMAGE=mysql
+export MYSQL_VERSION=5.7
+export ROOT_PASSWORD=rootpw
+export STUDENT_USER=student
+export STUDENT_PASSWORD=student
+export STUDENT_DATABASE=monitoring
+export MYSQL_SERVER_CONTAINER_NAME=mysql
+export MYSQL_SERVER_EXTERNAL_PORT=3306
+export MYSQL_SERVER_INTERNAL_PORT=3306
+
+docker rm -f mysql
+
+docker run -d \
+  --name mysql \
+  -p $MYSQL_SERVER_EXTERNAL_PORT:$MYSQL_SERVER_INTERNAL_PORT \
+  -e MYSQL_DATABASE=$STUDENT_DATABASE \
+  -e MYSQL_USER=$STUDENT_USER \
+  -e MYSQL_PASSWORD=$STUDENT_PASSWORD \
+  -e MYSQL_ROOT_PASSWORD=$ROOT_PASSWORD \
+  -v monitoring_data:/var/lib/mysql \
+  ${MYSQL_IMAGE}:${MYSQL_VERSION}
+docker ps
+➜  DockerWithMySQLRepo git:(main) ✗ ./runserver_first
+Error: No such container: mysql
+Unable to find image 'mysql:5.7' locally
+5.7: Pulling from library/mysql
+docker: no matching manifest for linux/arm64/v8 in the manifest list entries.
+See 'docker run --help'.
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+➜  DockerWithMySQLRepo git:(main) ✗ vim runserver_first
+➜  DockerWithMySQLRepo git:(main) ✗ ./runserver_first  
+Error: No such container: mysql
+2c4aeea298a36016ad61a2da9d6a77348e3f18ccfaecb635da0373784a1616a9
+CONTAINER ID   IMAGE          COMMAND                  CREATED        STATUS                  PORTS                               NAMES
+2c4aeea298a3   mysql:latest   "docker-entrypoint.s…"   1 second ago   Up Less than a second   0.0.0.0:3306->3306/tcp, 33060/tcp   mysql
+➜  DockerWithMySQLRepo git:(main) ✗ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
+nginx        latest    6b3e1257976b   2 days ago     135MB
+ubuntu       latest    3c2df5585507   2 weeks ago    69.2MB
+alpine/git   latest    36367a1d05cc   8 weeks ago    43.2MB
+mysql        latest    5e229524f286   2 months ago   494MB
+postgres     latest    7a1bef71607c   2 months ago   355MB
+mongo        latest    64b03285d18f   2 months ago   666MB
+➜  DockerWithMySQLRepo git:(main) ✗ docker pull mysql
+Using default tag: latest
+latest: Pulling from library/mysql
+01d65ebb4955: Pull complete 
+d609fcc3c7fb: Pull complete 
+52c09cdcd2da: Pull complete 
+2a478ef641e1: Pull complete 
+3f3956cc2f3f: Pull complete 
+33c37cc7a191: Pull complete 
+9f0cd074dc14: Pull complete 
+9186a3538218: Pull complete 
+0443c4afe5f0: Pull complete 
+d3dbcd809e72: Pull complete 
+eb36129f08c1: Pull complete 
+Digest: sha256:96439dd0d8d085cd90c8001be2c9dde07b8a68b472bd20efcbe3df78cff66492
+Status: Downloaded newer image for mysql:latest
+docker.io/library/mysql:latest
+➜  DockerWithMySQLRepo git:(main) ✗ docker images    
+REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
+mysql        latest    4b61a400e877   33 hours ago   550MB
+nginx        latest    6b3e1257976b   2 days ago     135MB
+ubuntu       latest    3c2df5585507   2 weeks ago    69.2MB
+alpine/git   latest    36367a1d05cc   8 weeks ago    43.2MB
+mysql        <none>    5e229524f286   2 months ago   494MB
+postgres     latest    7a1bef71607c   2 months ago   355MB
+mongo        latest    64b03285d18f   2 months ago   666MB
+➜  DockerWithMySQLRepo git:(main) ✗ docker run mysql
+2022-11-17 10:26:56+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.31-1.el8 started.
+2022-11-17 10:26:56+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2022-11-17 10:26:56+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.31-1.el8 started.
+2022-11-17 10:26:56+00:00 [ERROR] [Entrypoint]: Database is uninitialized and password option is not specified
+    You need to specify one of the following as an environment variable:
+    - MYSQL_ROOT_PASSWORD
+    - MYSQL_ALLOW_EMPTY_PASSWORD
+    - MYSQL_RANDOM_ROOT_PASSWORD
+➜  DockerWithMySQLRepo git:(main) ✗ cat runserver_first
+#! /bin/bash
+#
+# File: runserver
+#
+# Purpose: Runs the MySQL server in a Docker container
+#
+# NB: Uses a Docker volume named mysql_data to contain database data
+#
+
+export MYSQL_IMAGE=mysql
+export MYSQL_VERSION=latest
+export ROOT_PASSWORD=rootpw
+export STUDENT_USER=student
+export STUDENT_PASSWORD=student
+export STUDENT_DATABASE=monitoring
+export MYSQL_SERVER_CONTAINER_NAME=mysql
+export MYSQL_SERVER_EXTERNAL_PORT=3306
+export MYSQL_SERVER_INTERNAL_PORT=3306
+
+docker rm -f mysql
+
+docker run -d \
+  --name mysql \
+  -p $MYSQL_SERVER_EXTERNAL_PORT:$MYSQL_SERVER_INTERNAL_PORT \
+  -e MYSQL_DATABASE=$STUDENT_DATABASE \
+  -e MYSQL_USER=$STUDENT_USER \
+  -e MYSQL_PASSWORD=$STUDENT_PASSWORD \
+  -e MYSQL_ROOT_PASSWORD=$ROOT_PASSWORD \
+  -v monitoring_data:/var/lib/mysql \
+  ${MYSQL_IMAGE}:${MYSQL_VERSION}
+docker ps
+➜  DockerWithMySQLRepo git:(main) ✗ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
+mysql        latest    4b61a400e877   33 hours ago   550MB
+nginx        latest    6b3e1257976b   2 days ago     135MB
+ubuntu       latest    3c2df5585507   2 weeks ago    69.2MB
+alpine/git   latest    36367a1d05cc   8 weeks ago    43.2MB
+mysql        <none>    5e229524f286   2 months ago   494MB
+postgres     latest    7a1bef71607c   2 months ago   355MB
+mongo        latest    64b03285d18f   2 months ago   666MB
+➜  DockerWithMySQLRepo git:(main) ✗ docker run --name=mysql mysql
+docker: Error response from daemon: Conflict. The container name "/mysql" is already in use by container "2c4aeea298a36016ad61a2da9d6a77348e3f18ccfaecb635da0373784a1616a9". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+➜  DockerWithMySQLRepo git:(main) ✗ docker logs mysql
+2022-11-17 10:24:21+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.30-1.el8 started.
+2022-11-17 10:24:21+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2022-11-17 10:24:21+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.30-1.el8 started.
+2022-11-17 10:24:21+00:00 [Note] [Entrypoint]: Initializing database files
+2022-11-17T10:24:21.866266Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
+2022-11-17T10:24:21.866996Z 0 [System] [MY-013169] [Server] /usr/sbin/mysqld (mysqld 8.0.30) initializing of server in progress as process 80
+2022-11-17T10:24:21.878287Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2022-11-17T10:24:22.304116Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2022-11-17T10:24:23.258881Z 6 [Warning] [MY-010453] [Server] root@localhost is created with an empty password ! Please consider switching off the --initialize-insecure option.
+2022-11-17 10:24:25+00:00 [Note] [Entrypoint]: Database files initialized
+2022-11-17 10:24:25+00:00 [Note] [Entrypoint]: Starting temporary server
+2022-11-17T10:24:25.972768Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
+2022-11-17T10:24:25.975916Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.0.30) starting as process 131
+2022-11-17T10:24:25.997405Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2022-11-17T10:24:26.164862Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2022-11-17T10:24:26.410074Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2022-11-17T10:24:26.410106Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2022-11-17T10:24:26.411419Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
+2022-11-17T10:24:26.422293Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: /var/run/mysqld/mysqlx.sock
+2022-11-17T10:24:26.422424Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.0.30'  socket: '/var/run/mysqld/mysqld.sock'  port: 0  MySQL Community Server - GPL.
+2022-11-17 10:24:26+00:00 [Note] [Entrypoint]: Temporary server started.
+'/var/lib/mysql/mysql.sock' -> '/var/run/mysqld/mysqld.sock'
+Warning: Unable to load '/usr/share/zoneinfo/iso3166.tab' as time zone. Skipping it.
+Warning: Unable to load '/usr/share/zoneinfo/leapseconds' as time zone. Skipping it.
+Warning: Unable to load '/usr/share/zoneinfo/tzdata.zi' as time zone. Skipping it.
+Warning: Unable to load '/usr/share/zoneinfo/zone.tab' as time zone. Skipping it.
+Warning: Unable to load '/usr/share/zoneinfo/zone1970.tab' as time zone. Skipping it.
+2022-11-17 10:24:28+00:00 [Note] [Entrypoint]: Creating database monitoring
+2022-11-17 10:24:28+00:00 [Note] [Entrypoint]: Creating user student
+2022-11-17 10:24:28+00:00 [Note] [Entrypoint]: Giving user student access to schema monitoring
+
+2022-11-17 10:24:28+00:00 [Note] [Entrypoint]: Stopping temporary server
+2022-11-17T10:24:28.987915Z 13 [System] [MY-013172] [Server] Received SHUTDOWN from user root. Shutting down mysqld (Version: 8.0.30).
+2022-11-17T10:24:30.102326Z 0 [System] [MY-010910] [Server] /usr/sbin/mysqld: Shutdown complete (mysqld 8.0.30)  MySQL Community Server - GPL.
+2022-11-17 10:24:31+00:00 [Note] [Entrypoint]: Temporary server stopped
+
+2022-11-17 10:24:31+00:00 [Note] [Entrypoint]: MySQL init process done. Ready for start up.
+
+2022-11-17T10:24:31.271847Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
+2022-11-17T10:24:31.273193Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.0.30) starting as process 1
+2022-11-17T10:24:31.281128Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2022-11-17T10:24:31.383188Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2022-11-17T10:24:31.555809Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2022-11-17T10:24:31.555845Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2022-11-17T10:24:31.557067Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
+2022-11-17T10:24:31.568859Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
+2022-11-17T10:24:31.568953Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.0.30'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
+➜  DockerWithMySQLRepo git:(main) ✗ cd ..
+➜  ~ pwd
+/Users/fr13168
+➜  ~ mkdir DockerMySQL
+➜  ~ cd DockerMySQL
+➜  DockerMySQL vim Dockerfile
+➜  DockerMySQL vim Dockerfile
+➜  DockerMySQL vim mysqlsampledatabase.sql
+➜  DockerMySQL docker images                
+REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
+mysql        latest    4b61a400e877   36 hours ago   550MB
+nginx        latest    6b3e1257976b   2 days ago     135MB
+ubuntu       latest    3c2df5585507   2 weeks ago    69.2MB
+alpine/git   latest    36367a1d05cc   8 weeks ago    43.2MB
+mysql        <none>    5e229524f286   2 months ago   494MB
+postgres     latest    7a1bef71607c   2 months ago   355MB
+mongo        latest    64b03285d18f   2 months ago   666MB
+➜  DockerMySQL docker exec/id mysql
+docker: 'exec/id' is not a docker command.
+See 'docker --help'
+➜  DockerMySQL docker exec /id mysql
+Error: No such container: /id
+➜  DockerMySQL docker images                                                  
+REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
+mysql        latest    4b61a400e877   36 hours ago   550MB
+nginx        latest    6b3e1257976b   2 days ago     135MB
+ubuntu       latest    3c2df5585507   2 weeks ago    69.2MB
+alpine/git   latest    36367a1d05cc   8 weeks ago    43.2MB
+mysql        <none>    5e229524f286   2 months ago   494MB
+postgres     latest    7a1bef71607c   2 months ago   355MB
+mongo        latest    64b03285d18f   2 months ago   666MB
+➜  DockerMySQL docker build -t trainingmysql:0.1 .
+[+] Building 0.3s (7/7) FINISHED                                                                                                                                
+ => [internal] load build definition from Dockerfile                                                                                                       0.0s
+ => => transferring dockerfile: 255B                                                                                                                       0.0s
+ => [internal] load .dockerignore                                                                                                                          0.0s
+ => => transferring context: 2B                                                                                                                            0.0s
+ => [internal] load metadata for docker.io/library/mysql:latest                                                                                            0.0s
+ => [internal] load build context                                                                                                                          0.1s
+ => => transferring context: 203.00kB                                                                                                                      0.0s
+ => [1/2] FROM docker.io/library/mysql                                                                                                                     0.1s
+ => [2/2] ADD mysqlsampledatabase.sql /docker-entrypoint-initdb.d                                                                                          0.0s
+ => exporting to image                                                                                                                                     0.0s
+ => => exporting layers                                                                                                                                    0.0s
+ => => writing image sha256:130a1586cf2015ccbe670f0fb9756c7b2c028d30328168afcae2538197762dd2                                                               0.0s
+ => => naming to docker.io/library/trainingmysql:0.1                                                                                                       0.0s
+
+Use 'docker scan' to run Snyk tests against images to find vulnerabilities and learn how to fix them
+➜  DockerMySQL docker images                      
+REPOSITORY      TAG       IMAGE ID       CREATED          SIZE
+trainingmysql   0.1       130a1586cf20   10 seconds ago   550MB
+mysql           latest    4b61a400e877   36 hours ago     550MB
+nginx           latest    6b3e1257976b   2 days ago       135MB
+ubuntu          latest    3c2df5585507   2 weeks ago      69.2MB
+alpine/git      latest    36367a1d05cc   8 weeks ago      43.2MB
+mysql           <none>    5e229524f286   2 months ago     494MB
+postgres        latest    7a1bef71607c   2 months ago     355MB
+mongo           latest    64b03285d18f   2 months ago     666MB
+➜  DockerMySQL docker run --detach --name=containerMysql --publish 6603:3306 trainingmysql:0.1 -e MYSQL_ROOT_PASSWORD:root
+c9ea4fadb531615e41acc5b4b5b7da2547f9a70a677e8f95981fcf42ceaf55da
+➜  DockerMySQL docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED       STATUS       PORTS                               NAMES
+2c4aeea298a3   5e229524f286   "docker-entrypoint.s…"   3 hours ago   Up 3 hours   0.0.0.0:3306->3306/tcp, 33060/tcp   mysql
+➜  DockerMySQL docker login -u jojozhuang
+Password: 
+Error: Password Required
+➜  DockerMySQL docker login -u jojozhuang
+Password: 
+Error response from daemon: Get "https://registry-1.docker.io/v2/": unauthorized: incorrect username or password
+➜  DockerMySQL docker login -u jojozhuang
+Password: 
+Error response from daemon: Get "https://registry-1.docker.io/v2/": unauthorized: incorrect username or password
+➜  DockerMySQL docker login -u root      
+Password: 
+Error response from daemon: Get "https://registry-1.docker.io/v2/": unauthorized: incorrect username or password
+➜  DockerMySQL docker push jojozhuang/jspmysql
+Using default tag: latest
+The push refers to repository [docker.io/jojozhuang/jspmysql]
+An image does not exist locally with the tag: jojozhuang/jspmysql
+➜  DockerMySQL docker push trainingmysql/jspmysql
+Using default tag: latest
+The push refers to repository [docker.io/trainingmysql/jspmysql]
+An image does not exist locally with the tag: trainingmysql/jspmysql
+➜  DockerMySQL docker run --detach --name=containerMysql -e MYSQL_ROOT_PASSWORD:root --publish 6603:3306 trainingmysql:0.1
+docker: Error response from daemon: Conflict. The container name "/containerMysql" is already in use by container "c9ea4fadb531615e41acc5b4b5b7da2547f9a70a677e8f95981fcf42ceaf55da". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+➜  DockerMySQL docker run --detach --name=containerMysql -e MYSQL_ROOT_PASSWORD:root --publish 6603:3306 trainingmysql:0.1
+docker: Error response from daemon: Conflict. The container name "/containerMysql" is already in use by container "c9ea4fadb531615e41acc5b4b5b7da2547f9a70a677e8f95981fcf42ceaf55da". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+➜  DockerMySQL docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED       STATUS       PORTS                               NAMES
+2c4aeea298a3   5e229524f286   "docker-entrypoint.s…"   3 hours ago   Up 3 hours   0.0.0.0:3306->3306/tcp, 33060/tcp   mysql
+➜  DockerMySQL docker commit -m "db restored" -a "Johnny" f91d97a62086 bmourrieras/jspmysql
+Error response from daemon: No such container: f91d97a62086
+➜  DockerMySQL docker commit -m "db restored" -a "Johnny" 2c4aeea298a3 bmourrieras/jspmysql
+sha256:8312084492824c7a1d3d16b2842927a31ca2133806f230fdf625a4d4696497b0
+➜  DockerMySQL cd ..
+➜  ~ ls
+Applications                    DockerWithMySQLRepo             Movies                          Postman                         getting-started
+Applications (Parallels)        Documents                       Music                           Public                          package-lock.json
+Desktop                         Downloads                       Parallels                       PycharmProjects                 prodvCorr.js
+DockerMySQL                     Library                         Pictures                        create_Tables_first_project.sql requêtes de recherche.sql
+➜  ~ mkdir DockerCompose
+➜  ~ cd DockerCompose 
+➜  DockerCompose git pull https://github.com/bplmarvert/DockerWithMySQLRepo.git
+fatal: not a git repository (or any of the parent directories): .git
+➜  DockerCompose git pull https://github.com/bplmarvert/DockerWithMySQLRepo.gitv
+➜  DockerCompose 
+➜  DockerCompose 
+➜  DockerCompose 
+➜  DockerCompose 
+➜  DockerCompose 
+➜  DockerCompose 
+➜  DockerCompose 
+➜  DockerCompose 
+➜  DockerCompose git pull https://github.com/bplmarv                           
+➜  DockerCompose 
+➜  DockerCompose 
+➜  DockerCompose ll
+total 0
+➜  DockerCompose git pull https://github.com/bplmarvert/DockerWithMySQLRepo.git
+fatal: not a git repository (or any of the parent directories): .git
+➜  DockerCompose git clone https://github.com/bplmarvert/DockerWithMySQLRepo.git
+Cloning into 'DockerWithMySQLRepo'...
+remote: Enumerating objects: 29, done.
+remote: Counting objects: 100% (29/29), done.
+remote: Compressing objects: 100% (23/23), done.
+remote: Total 29 (delta 9), reused 23 (delta 5), pack-reused 0
+Receiving objects: 100% (29/29), 734.94 KiB | 3.91 MiB/s, done.
+Resolving deltas: 100% (9/9), done.
+➜  DockerCompose cd DockerWithMySQLRepo 
+➜  DockerWithMySQLRepo git:(main) clear
+
+➜  DockerWithMySQLRepo git:(main) ll
+total 32
+drwxr-xr-x  5 fr13168  staff   160B Nov 17 14:48 DockerCompose
+drwxr-xr-x  5 fr13168  staff   160B Nov 17 14:48 MySQL_DockerFile_Example
+-rw-r--r--  1 fr13168  staff   2.2K Nov 17 14:48 README.md
+-rw-r--r--  1 fr13168  staff    74B Nov 17 14:48 runclient
+-rw-r--r--  1 fr13168  staff   809B Nov 17 14:48 runserver_first
+-rw-r--r--  1 fr13168  staff   813B Nov 17 14:48 runserver_first.save
+drwxr-xr-x  3 fr13168  staff    96B Nov 17 14:48 sql
+➜  DockerWithMySQLRepo git:(main) cd DockerCompose 
+➜  DockerCompose git:(main) ll
+total 1480
+-rw-r--r--  1 fr13168  staff   235B Nov 17 14:48 Dockerfile
+-rw-r--r--  1 fr13168  staff   729K Nov 17 14:48 Lab 6.5 Docker Compose.docx
+-rw-r--r--  1 fr13168  staff    97B Nov 17 14:48 docker-compose.yml
+➜  DockerCompose git:(main) touch Dockerfile
+➜  DockerCompose git:(main) vi Dockerfile
+➜  DockerCompose git:(main) docker build -t "centosapache:0.1" .
+[+] Building 199.4s (7/7) FINISHED                                                                                                                              
+ => [internal] load build definition from Dockerfile                                                                                                       0.0s
+ => => transferring dockerfile: 279B                                                                                                                       0.0s
+ => [internal] load .dockerignore                                                                                                                          0.0s
+ => => transferring context: 2B                                                                                                                            0.0s
+ => [internal] load metadata for docker.io/library/centos:7                                                                                                2.5s
+ => [auth] library/centos:pull token for registry-1.docker.io                                                                                              0.0s
+ => [1/2] FROM docker.io/library/centos:7@sha256:c73f515d06b0fa07bb18d8202035e739a494ce760aa73129f60f4bf2bd22b407                                         11.9s
+ => => resolve docker.io/library/centos:7@sha256:c73f515d06b0fa07bb18d8202035e739a494ce760aa73129f60f4bf2bd22b407                                          0.0s
+ => => sha256:6717b8ec66cd6add0272c6391165585613c31314a43ff77d9751b53010e531ec 108.37MB / 108.37MB                                                         8.9s
+ => => sha256:c73f515d06b0fa07bb18d8202035e739a494ce760aa73129f60f4bf2bd22b407 1.20kB / 1.20kB                                                             0.0s
+ => => sha256:73f11afcbb50d8bc70eab9f0850b3fa30e61a419bc48cf426e63527d14a8373b 530B / 530B                                                                 0.0s
+ => => sha256:c9a1fdca3387618f8634949de4533419327736e2f5c618e3bfebe877aa331352 2.77kB / 2.77kB                                                             0.0s
+ => => extracting sha256:6717b8ec66cd6add0272c6391165585613c31314a43ff77d9751b53010e531ec                                                                  2.9s
+ => [2/2] RUN yum update -y && yum install httpd httpd-tools -y                                                                                          182.5s
+ => exporting to image                                                                                                                                     2.3s
+ => => exporting layers                                                                                                                                    2.3s
+ => => writing image sha256:16d1f86f947c7e149402515343d6d3b3a21596164684974b4e4cb4cbbfd3dfef                                                               0.0s 
+ => => naming to docker.io/library/centosapache:0.1                                                                                                        0.0s 
+                                                                                                                                                                
+Use 'docker scan' to run Snyk tests against images to find vulnerabilities and learn how to fix them                                                            
+➜  DockerCompose git:(main) docker run -d -p 8090:80 --name centoshttpdcontainer centosapache:0.1
+bfc1e0f1269e987b9fbbe498f2755e4d1c6ce2691e6df4a346a0c4638e45954b
+➜  DockerCompose git:(main) docker ps
+CONTAINER ID   IMAGE              COMMAND                  CREATED          STATUS         PORTS                  NAMES
+bfc1e0f1269e   centosapache:0.1   "/usr/sbin/httpd -D …"   10 seconds ago   Up 9 seconds   0.0.0.0:8090->80/tcp   centoshttpdcontainer
+➜  DockerCompose git:(main) touch docker-compose.yml
+➜  DockerCompose git:(main) vi docker-compose.yml
+➜  DockerCompose git:(main) cat docker-compose.yml
+services:
+    centoshttpd:
+        image: centosapache:0.1
+        ports:
+            - "7080:80"%                                                                                                                                        ➜  DockerCompose git:(main) ~/bin/docker-compose up -d
+zsh: no such file or directory: /Users/fr13168/bin/docker-compose
+➜  DockerCompose git:(main) ~/bin/docker-compose ps
+zsh: no such file or directory: /Users/fr13168/bin/docker-compose
+➜  DockerCompose git:(main) docker-compose up -d
+[+] Running 2/2
+ ⠿ Network dockercompose_default          Created                                                                                                          0.1s
+ ⠿ Container dockercompose-centoshttpd-1  Started                                                                                                          0.4s
+➜  DockerCompose git:(main) docker-compose ps
+NAME                          COMMAND                  SERVICE             STATUS              PORTS
+dockercompose-centoshttpd-1   "/usr/sbin/httpd -D …"   centoshttpd         running             0.0.0.0:7080->80/tcp
+➜  DockerCompose git:(main) docker-compose down
+[+] Running 2/2
+ ⠿ Container dockercompose-centoshttpd-1  Removed                                                                                                          0.2s
+ ⠿ Network dockercompose_default          Removed                                                                                                          0.1s
+➜  DockerCompose git:(main) docker-compose ps
+NAME                COMMAND             SERVICE             STATUS              PORTS
+➜  DockerCompose git:(main) cd .. 
+➜  DockerWithMySQLRepo git:(main) cd ..
+➜  DockerCompose cd ..
+➜  ~ mkdir DockerPrj
+➜  ~ cd DockerPrj
+➜  DockerPrj git clone https://github.com/bplmarvert/MAVEN_WAR_HELLO_WORLD.git   
+Cloning into 'MAVEN_WAR_HELLO_WORLD'...
+remote: Enumerating objects: 186, done.
+remote: Total 186 (delta 0), reused 0 (delta 0), pack-reused 186
+Receiving objects: 100% (186/186), 105.82 MiB | 1.61 MiB/s, done.
+Resolving deltas: 100% (29/29), done.
+➜  DockerPrj ls
+MAVEN_WAR_HELLO_WORLD
+➜  DockerPrj cd MAVEN_WAR_HELLO_WORLD 
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ls
+README.md pom.xml   src       target
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ll
+total 32
+-rw-r--r--   1 fr13168  staff   630B Nov 17 15:54 README.md
+-rw-r--r--   1 fr13168  staff   9.8K Nov 17 15:54 pom.xml
+drwxr-xr-x   4 fr13168  staff   128B Nov 17 15:54 src
+drwxr-xr-x  11 fr13168  staff   352B Nov 17 15:54 target
+➜  MAVEN_WAR_HELLO_WORLD git:(main) vim Dockerfile
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ ls
+Dockerfile README.md  pom.xml    src        target
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ vim Jenkinsfile
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ vim deploy-docker.yml
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ ls
+Dockerfile        Jenkinsfile       README.md         deploy-docker.yml pom.xml           src               target
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ sudo wget -O /etc/yum.repos.d/jenkins.repo \
+    https://pkg.jenkins.io/redhat-stable/jenkins.repo
+Password:
+Sorry, try again.
+Password:
+Sorry, try again.
+Password:
+sudo: 2 incorrect password attempts
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ ls
+Dockerfile        Jenkinsfile       README.md         deploy-docker.yml pom.xml           src               target
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ vim Dockerfile
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ clear
+
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ ls
+Dockerfile        Jenkinsfile       README.md         deploy-docker.yml pom.xml           src               target
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ vi Jenkinsfile
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ ls
+Dockerfile        Jenkinsfile       README.md         deploy-docker.yml pom.xml           src               target
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ vi deploy-docker.yml 
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ vi pom.xml
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ vi pom.xml
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ ls
+Dockerfile        Jenkinsfile       README.md         deploy-docker.yml pom.xml           src               target
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ vi Jenkinsfile
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ ls
+Dockerfile        Jenkinsfile       README.md         deploy-docker.yml pom.xml           src               target
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ vi deploy-docker.yml 
+➜  MAVEN_WAR_HELLO_WORLD git:(main) ✗ vi pom.xml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>spring-boot-deployment</artifactId>
+    <name>spring-boot-deployment</name>
+    <packaging>war</packaging>
+    <description>Demo project for Spring Boot</description>
+
+    <parent>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>2.6.6</version>
+                <relativePath/> <!-- lookup parent from repository -->
+        </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <version>${jpa.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+"pom.xml" [noeol] 254L, 10086B
